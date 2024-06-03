@@ -228,7 +228,9 @@ For my personal data set, where I am examining the distance traveled each day, I
 
 ## Part d
 
-# Problem 3. Statistical critique
+For my visualization, I have created a scene of a car traveling on a hilly road. The hills represent the distance traveled (in miles) each day, some days peaking while others are flatter. This work was done on a digital coloring platform called Notability. I began by importing a screenshot of my data (bar graph) and from there I traced and colored it. I finished it off by adding details, such as the road and cars. During this process I was unsure whether to keep each date and numerical value, however ultimately did decide to keep them because I thought it helped the viewer see the information clearer.
+
+*Problem 3. Statistical critique*
 
 ## Part a
 
