@@ -1,0 +1,245 @@
+---
+title: "ES 193DS Homework 3"
+date: 2024-06-02
+author: "Ella Stookey"
+format: pdf
+---
+
+# Preparations
+
+## Reading in packages
+
+```{r}
+# general use
+library(tidyverse)
+library(readxl)
+library(here)
+library(janitor)
+
+# visualizing pairs
+library(GGally)
+
+# model selection
+library(MuMIn)
+
+# model predictions
+library(ggeffects)
+
+# model tables
+library(gtsummary)
+library(flextable)
+library(modelsummary)
+
+drought_exp <- read_xlsx(path = here("data", 
+                                     "Valliere_etal_EcoApps_Data.xlsx"),
+                         sheet = "First Harvest")
+
+# quick look at data 
+str(drought_exp)
+class(drought_exp)
+```
+
+## Cleaning
+
+```{r}
+# cleaning
+drought_exp_clean <- drought_exp %>% 
+  clean_names() %>% # nicer column names
+  mutate(species_name = case_when( # adding column with species scientific names
+    species == "ENCCAL" ~ "Encelia californica", # bush sunflower
+    species == "ESCCAL" ~ "Eschscholzia californica", # California poppy
+    species == "PENCEN" ~ "Penstemon centranthifolius", # Scarlet bugler
+    species == "GRICAM" ~ "Grindelia camporum", # great valley gumweed
+    species == "SALLEU" ~ "Salvia leucophylla", # Purple sage
+    species == "STIPUL" ~ "Nasella pulchra", # Purple needlegrass
+    species == "LOTSCO" ~ "Acmispon glaber" # deerweed
+  )) %>% 
+  relocate(species_name, .after = species) %>% # moving species_name column after species
+  mutate(water_treatment = case_when( # adding column with full treatment names
+    water == "WW" ~ "Well watered",
+    water == "DS" ~ "Drought stressed"
+  )) %>% 
+  relocate(water_treatment, .after = water) # moving water_treatment column after water
+
+
+```
+
+## correlations
+
+```{r}
+ggpairs(drought_exp_clean, # data frame
+        columns = c("leaf_dry_weight_g", # columns to visualize
+                    "sla", 
+                    "shoot_g", 
+                    "root_g", 
+                    "total_g"), 
+        upper = list(method = "pearson")) + # calculating Pearson correlation coefficient
+  theme_bw() + # cleaner theme
+  theme(panel.grid = element_blank()) # getting rid of gridlines
+
+# bottom left scatterplots of listed variables -- Leaf dry weight on x axis, y axis is total mass
+# diagnol shows ?
+# upper right shows Pearson's correlation -- positively correlated
+```
+
+# Problem 1. Multiple linear regression: model selection and construction
+
+## Part a
+
+### 0. Null model
+
+```{r}
+model0 <- lm(total_g ~ 1, # formula
+             data = drought_exp_clean) # data frame
+```
+
+### 1. total biomass as a function of SLA, water treatment, and species
+
+```{r}
+# saturated model
+model1 <- lm(total_g ~ sla + water_treatment + species_name,
+             data = drought_exp_clean)
+
+par(mfrow = c(2, 2))
+plot(model1)
+```
+
+### 2. total biomass as a function of SLA and water treatment
+
+```{r}
+model2 <- lm(total_g ~ sla + water_treatment,
+             data = drought_exp_clean)
+
+plot(model2)
+```
+
+### 3. total biomass as a function of SLA and species
+
+```{r}
+model3 <- lm(total_g ~ sla + species_name,
+             data = drought_exp_clean)
+
+plot(model3)
+```
+
+### 4. total biomass as a function of water treatment and species
+
+```{r}
+model4 <- lm(total_g ~ water_treatment + species_name,
+             data = drought_exp_clean)
+
+plot(model4)
+```
+
+```{r}
+modelselectiontable <- model.sel(model0,
+          model1, 
+          model2, 
+          model3,
+          model4)
+# delta for the best AIC will always be 0
+```
+
+## Table presentation
+
+```{r}
+# one option for a single model
+flextable::as_flextable(modelselectiontable) 
+
+# comparing models
+modelsummary::modelsummary( # this function takes a list of models
+  list(
+    "null" = model0, # "model name" = model object
+    "model 1" = model1,
+    "model 2" = model2,
+    "model 3" = model3,
+    "model 4" = model4
+  )
+)
+
+```
+
+## Part b
+
+## Part c
+
+# Model predictions
+
+**Note:** only plot terms in the model you select - if your doesn't include one of these terms, take it out and adjust the plotting code accordingly!
+
+```{r}
+model_preds <- ggpredict(model4, 
+                         terms = c(
+                                   "water_treatment", 
+                                   "species_name"))
+
+# use View(model_preds) to see the predictions as a data frame
+# use model_preds to see the predictions formatted nicely
+```
+
+```{r}
+# creating new data frame of model predictions for plotting
+model_preds_for_plotting <- model_preds %>% 
+  rename(water_treatment = x, # renaming columns to make this easier to use
+         species_name = group)
+
+# use View(model_preds_for_plotting) 
+# to compare this to the original model_preds data frame
+
+ggplot() +
+  # underlying data
+  geom_point(data = drought_exp_clean,
+             aes(x = water_treatment,
+                 y = total_g,
+                 color = water_treatment),
+             alpha = 0.1) +
+  # model prediction 95% CI ribbon
+  geom_ribbon(data = model_preds_for_plotting,
+              aes(x = water_treatment, 
+                  y = predicted,
+                  ymin = conf.low,
+                  ymax = conf.high,
+                  fill = water_treatment),
+              alpha = 0.2) +
+  # model prediction lines
+  geom_line(data = model_preds_for_plotting,
+            aes(x = water_treatment, 
+                y = predicted,
+                color = water_treatment)) +
+  # cleaner theme
+  theme_classic() +
+  # creating different panels for species
+  facet_wrap(~species_name) 
+```
+
+## Part d
+
+## Part e
+
+# Problem 2. Affective visualization
+
+## Part a
+
+For my personal data set, where I am examining the distance traveled each day, I could use a bar graph and outline the perimeter of each peak. In doing so, the graph will appear to be "hilly". Since my data is about driving, I will turn this into a scene with a car driving over hills (ie the bar graph).
+
+## Part b
+
+## Part c
+
+## Part d
+
+# Problem 3. Statistical critique
+
+## Part a
+
+To examine the long-term effects of a wildfire on soil nutrients and makeup, the researchers used a two-way ANOVA test and if significant differences were found (p \< 0.05), a Tukey HSD post-hoc test was applied. The authors represented these statistical tests in three tables. Table 1 shows the results of the ANOVA test and Tables 2 & 3 show the descriptive statitics for certain nutrients. In addition to the tables, there were two figures. The first was a map that illustrated the study location and areas with varying fire severity. The second figure was an RDA for the relation between factors 1 and 2.
+
+## Part b
+
+All three tables were very clear, with descriptive captions and column and row labels. Figure 1 was also simple to understand because it consisted of images and maps for context. However, figure 2 was significantly more confusing to understand because I have never looked at a redundancy analysis (RDA) plot before. There are no units on the x and y axis and at first glance the numbers seem quiet arbitrary. After researching how to read the plot, it made more sense and I could see how the variables' summary statistics (means and standard deviations) were being shown. No model predictions were in the matrix, but rather just the collected data.
+
+## Part c
+
+The tables all hold a lot of information and data making them seem a bit visually cluttered. However, this was crucial information for the researchers to show so it was necessary to include it all. SUGGEST HOW TO MAKE IT BETTER? Figure 2, the RDA plot, had a very good data to ink ratio, only consisting of a few lines, two colors, and minimal lettering.
+
+## Part d
