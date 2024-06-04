@@ -230,7 +230,7 @@ For my personal data set, where I am examining the distance traveled each day, I
 
 For my visualization, I have created a scene of a car traveling on a hilly road. The hills represent the distance traveled (in miles) each day, some days peaking while others are flatter. This work was done on a digital coloring platform called Notability. I began by importing a screenshot of my data (bar graph) and from there I traced and colored it. I finished it off by adding details, such as the road and cars. During this process I was unsure whether to keep each date and numerical value, however ultimately did decide to keep them because I thought it helped the viewer see the information clearer.
 
-*Problem 3. Statistical critique*
+# Problem 3. Statistical critique
 
 ## Part a
 
@@ -242,6 +242,8 @@ All three tables were very clear, with descriptive captions and column and row l
 
 ## Part c
 
-The tables all hold a lot of information and data making them seem a bit visually cluttered. However, this was crucial information for the researchers to show so it was necessary to include it all. SUGGEST HOW TO MAKE IT BETTER? Figure 2, the RDA plot, had a very good data to ink ratio, only consisting of a few lines, two colors, and minimal lettering.
+The tables all hold a lot of information and data making them seem a bit visually cluttered. However, this was crucial information for the researchers to show so it was necessary to include it all. Figure 2, the RDA plot, had a very good data to ink ratio, only consisting of a few lines, two colors, and minimal lettering.
 
 ## Part d
+
+For the tables, I think they could have been made clearer if titles/ labels were bolded or a larger font. This would help differentiate the organizational aspects from the large amounts of data. Additionally having lines in the table would have helped section off different nutrients' information instead of it all blending together. As for the figure, I wish the caption included more information about what each percent on the sides of the plot and the axes represent. Although information about this is included in the text of the paper, I think including it on the figure is crucial so the reader can get a clear picture of the results from the experiment.
