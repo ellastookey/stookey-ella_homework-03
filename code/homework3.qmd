@@ -10,25 +10,31 @@ format: pdf
 ## Reading in packages
 
 ```{r}
-# general use
-library(tidyverse)
-library(readxl)
-library(here)
-library(janitor)
+# hide messages and warnings
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
-# visualizing pairs
-library(GGally)
-
-# model selection
-library(MuMIn)
-
-# model predictions
-library(ggeffects)
-
-# model tables
-library(gtsummary)
-library(flextable)
-library(modelsummary)
+suppressPackageStartupMessages({
+  # general use
+  library(tidyverse)
+  library(readxl)
+  library(here)
+  library(janitor)
+  
+  # visualizing pairs
+  library(GGally)
+  
+  # model selection
+  library(MuMIn)
+  
+  # model predictions
+  library(ggeffects)
+  
+  # model tables
+  library(gtsummary)
+  library(flextable)
+  library(modelsummary)
+  library(knitr)
+})
 
 drought_exp <- read_xlsx(path = here("data", 
                                      "Valliere_etal_EcoApps_Data.xlsx"),
@@ -143,19 +149,16 @@ modelselectiontable <- model.sel(model0,
 ## Table presentation
 
 ```{r}
-# one option for a single model
-flextable::as_flextable(modelselectiontable) 
-
-# comparing models
-modelsummary::modelsummary( # this function takes a list of models
-  list(
-    "null" = model0, # "model name" = model object
-    "model 1" = model1,
-    "model 2" = model2,
-    "model 3" = model3,
-    "model 4" = model4
-  )
+model_info <- data.frame(
+  Model_number = c("0 (null)", "1 (saturated)", 2, 3, 4),
+  Predictors = c("None", "SLA, Treatment, Species", "SLA, Treatment", "SLA, Species","Treatment, Species")
 )
+```
+
+```{r}
+kable(model_info,
+      caption = "Table 1",
+      col.names = c("Model", "Predictors")) #label columns
 
 ```
 
