@@ -5,6 +5,8 @@ author: "Ella Stookey"
 format: pdf
 ---
 
+Forked Repository: ADD LINK
+
 # Preparations
 
 ## Reading in packages
@@ -67,7 +69,7 @@ drought_exp_clean <- drought_exp %>%
   )) %>% 
   relocate(water_treatment, .after = water) # moving water_treatment column after water
 
-
+drought_exp_clean
 ```
 
 ## correlations
@@ -84,7 +86,6 @@ ggpairs(drought_exp_clean, # data frame
   theme(panel.grid = element_blank()) # getting rid of gridlines
 
 # bottom left scatterplots of listed variables -- Leaf dry weight on x axis, y axis is total mass
-# diagnol shows ?
 # upper right shows Pearson's correlation -- positively correlated
 ```
 
@@ -116,6 +117,7 @@ plot(model1)
 model2 <- lm(total_g ~ sla + water_treatment,
              data = drought_exp_clean)
 
+par(mfrow = c(2, 2))
 plot(model2)
 ```
 
@@ -125,6 +127,7 @@ plot(model2)
 model3 <- lm(total_g ~ sla + species_name,
              data = drought_exp_clean)
 
+par(mfrow = c(2, 2))
 plot(model3)
 ```
 
@@ -134,16 +137,23 @@ plot(model3)
 model4 <- lm(total_g ~ water_treatment + species_name,
              data = drought_exp_clean)
 
+par(mfrow = c(2, 2))
 plot(model4)
 ```
 
 ```{r}
-modelselectiontable <- model.sel(model0,
+# Model selection table to see AIC and delta values
+
+model.sel(model0,
           model1, 
           model2, 
           model3,
           model4)
-# delta for the best AIC will always be 0
+```
+
+```{r}
+# See model 4 coefficents
+summary(model4)
 ```
 
 ## Table presentation
@@ -163,6 +173,8 @@ kable(model_info,
 ```
 
 ## Part b
+
+To examine the influence of specific leaf area, water treatment, and plant species type on total plant biomass, I have constructed and analyzed five linear regression models. To determine the model that best described the impact these potential influences have on plant biomass, a model selection table was used. This revealed model 4, which examined the water treatment and plant species variables, to have the lowest Akaike Information Criterion (AIC) of -156.2 and a delta of 0. These values suggest that model 4 is best because it is descriptive, but not too complex. To confirm this, I had to ensure that model 4 conformed to the assumptions of a linear model by examining its diagnostic plots. Beginning with the homeoscadatic models, the residuals are scattered along a straight line and have an even distribution above and below the red line indicating the constant variance. The Q-Q plot tests if the data is normally distributed, which it appears to be as it follows a linear path. The last plot shows no outliers with significant influence because if there were, there would be a red dashed line with points falling outside of it. Overall, the diagnostic plots confirm the model selection tables' suggestion that model 4 is best. Lastly, model 4's coefficient summary was examined to further solidify the conclusion that it is the best model. After looking at the slope, intercept, and level estimates, model 4 was confirmed best as they showed the significant differences between water treatments and the varying biomasses across plant species. 
 
 ## Part c
 
