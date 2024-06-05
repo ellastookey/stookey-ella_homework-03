@@ -205,6 +205,7 @@ ggplot() +
              aes(x = water_treatment,
                  y = total_g,
                  color = water_treatment)) +
+  # add prediction data
   geom_point(data = model_preds_for_plotting,
              aes(x = water_treatment,
                  y = predicted,
@@ -221,9 +222,12 @@ ggplot() +
   theme_classic() +
   # creating different panels for species
   facet_wrap(~species_name) +
-  theme(legend.position = "none") + 
+  theme(legend.position = "none") + # removed legend
+  labs(title = "Predicted Impact of Water Treatment and Plant Species on Total Biomass",
+       x = "Water Treatment",
+       y = "Total Biomass (g)") + # change plot title and axes labels
   scale_color_manual(values = c("Well watered" = "orange",
-                                "Drought stressed" = "lightblue"))
+                                "Drought stressed" = "lightblue")) # change colors
 ```
 
 ## Part d
