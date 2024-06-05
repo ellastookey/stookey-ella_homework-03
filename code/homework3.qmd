@@ -169,7 +169,6 @@ model_info <- data.frame(
 kable(model_info,
       caption = "Table 1",
       col.names = c("Model", "Predictors")) #label columns
-
 ```
 
 ## Part b
@@ -180,10 +179,8 @@ To examine the influence of specific leaf area, water treatment, and plant speci
 
 # Model predictions
 
-**Note:** only plot terms in the model you select - if your doesn't include one of these terms, take it out and adjust the plotting code accordingly!
-
 ```{r}
-model_preds <- ggpredict(model4, 
+model4_preds <- ggpredict(model4, 
                          terms = c(
                                    "water_treatment", 
                                    "species_name"))
@@ -194,42 +191,46 @@ model_preds <- ggpredict(model4,
 
 ```{r}
 # creating new data frame of model predictions for plotting
-model_preds_for_plotting <- model_preds %>% 
+model_preds_for_plotting <- model4_preds %>%
   rename(water_treatment = x, # renaming columns to make this easier to use
          species_name = group)
 
-# use View(model_preds_for_plotting) 
+# use View(model_preds_for_plotting)
 # to compare this to the original model_preds data frame
 
 ggplot() +
   # underlying data
   geom_point(data = drought_exp_clean,
+             alpha = 0.1,
              aes(x = water_treatment,
                  y = total_g,
-                 color = water_treatment),
-             alpha = 0.1) +
-  # model prediction 95% CI ribbon
-  geom_ribbon(data = model_preds_for_plotting,
+                 color = water_treatment)) +
+  geom_point(data = model_preds_for_plotting,
+             aes(x = water_treatment,
+                 y = predicted,
+                 color = water_treatment)) +
+  # model prediction 95% CI errorbar
+  geom_errorbar(data = model_preds_for_plotting,
               aes(x = water_treatment, 
                   y = predicted,
                   ymin = conf.low,
                   ymax = conf.high,
                   fill = water_treatment),
-              alpha = 0.2) +
-  # model prediction lines
-  geom_line(data = model_preds_for_plotting,
-            aes(x = water_treatment, 
-                y = predicted,
-                color = water_treatment)) +
+              width = 0.2, alpha = 0.5) +
   # cleaner theme
   theme_classic() +
   # creating different panels for species
-  facet_wrap(~species_name) 
+  facet_wrap(~species_name) +
+  theme(legend.position = "none") + 
+  scale_color_manual(values = c("Well watered" = "orange",
+                                "Drought stressed" = "lightblue"))
 ```
 
 ## Part d
 
 ## Part e
+Model 4, the best model and shown above in the figure, has the predictors of water treatment and plant species, both of which best describe total mass. Model 4 has the lowest AIC value (AIC = -156.2) of all the models, a delta of 0, an F-statistic of 27.08, and a p-value of 2.2e-16, all of which support that this is a significant model. On average between water treatments, those that were well watered tended to have a higher total biomass than those that were drought stressed. 
+
 
 # Problem 2. Affective visualization
 
