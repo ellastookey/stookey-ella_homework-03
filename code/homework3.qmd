@@ -8,7 +8,7 @@ execute: # for all code chunks
     message: false # do not display messages
 ---
 
-Forked Repository: ADD LINK
+Forked Repository: <https://github.com/ellastookey/stookey-ella_homework-03>
 
 # Preparations
 
@@ -255,9 +255,11 @@ For my personal data set, where I am examining the distance traveled each day, I
 
 ## Part b
 
+see at end
+
 ## Part c
 
-## 
+see at end
 
 ## Part d
 
