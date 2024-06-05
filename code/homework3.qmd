@@ -3,6 +3,9 @@ title: "ES 193DS Homework 3"
 date: 2024-06-02
 author: "Ella Stookey"
 format: pdf
+execute: # for all code chunks
+    warning: false # do not display warnings
+    message: false # do not display messages
 ---
 
 Forked Repository: ADD LINK
@@ -159,16 +162,17 @@ summary(model4)
 ## Table presentation
 
 ```{r}
+# Making a table
 model_info <- data.frame(
-  Model_number = c("0 (null)", "1 (saturated)", 2, 3, 4),
+  Model_Number = c("0 (null)", "1 (saturated)", 2, 3, 4),
   Predictors = c("None", "SLA, Treatment, Species", "SLA, Treatment", "SLA, Species","Treatment, Species")
 )
 ```
 
 ```{r}
 kable(model_info,
-      caption = "Table 1",
-      col.names = c("Model", "Predictors")) #label columns
+      caption = "Table 1: Models and their Predictors for Total Plant Biomass. This table shows five linear regression models (0-4) and their predictors. Model 0 is a null model (contains no predictors) and model 1 is saturated (contains all three possible predictors). The other three models consist of a combination of predictors. The model numbers and the predictors are in the rows, while the columns label these two categories",
+      col.names = c("Model", "Predictors")) # label columns
 ```
 
 ## Part b
@@ -201,7 +205,7 @@ model_preds_for_plotting <- model4_preds %>%
 ggplot() +
   # underlying data
   geom_point(data = drought_exp_clean,
-             alpha = 0.1,
+             alpha = 0.2,
              aes(x = water_treatment,
                  y = total_g,
                  color = water_treatment)) +
@@ -223,7 +227,7 @@ ggplot() +
   # creating different panels for species
   facet_wrap(~species_name) +
   theme(legend.position = "none") + # removed legend
-  labs(title = "Predicted Impact of Water Treatment and Plant Species on Total Biomass",
+  labs(title = "Impact of Water Treatment and Plant Species on Total Biomass",
        x = "Water Treatment",
        y = "Total Biomass (g)") + # change plot title and axes labels
   scale_color_manual(values = c("Well watered" = "orange",
@@ -231,9 +235,12 @@ ggplot() +
 ```
 
 ## Part d
+This figure shows the predicted (darker points) and underlying data (lighter points) of water treatment changes and varying plant species on total plant biomass. Each plot represents a different species' data, all having well watered (orange) and drought stressed (blue) on the x-axis and total biomass (in grams) on the y-axis. The error bars represent a 95% confidence interval for the predicted values of each species. 
+
+Valliere, Justin; Zhang, Jacqueline; Sharifi, M.; Rundel, Philip (2019). Data from: Can we condition native plants to increase drought tolerance and improve restoration success? [Dataset]. Dryad. https://doi.org/10.5061/dryad.v0861f7
 
 ## Part e
-Model 4, the best model and shown above in the figure, has the predictors of water treatment and plant species, both of which best describe total mass. Model 4 has the lowest AIC value (AIC = -156.2) of all the models, a delta of 0, an F-statistic of 27.08, and a p-value of 2.2e-16, all of which support that this is a significant model. On average between water treatments, those that were well watered tended to have a higher total biomass than those that were drought stressed. 
+Model 4, the best model and shown above in the figure, has the predictors of water treatment and plant species, both of which best describe total mass. Model 4 has the lowest AIC value (AIC = -156.2) of all the models and a delta of 0, suggesting it is the best and significant model (F(7,62) = 27.08, p<0.001, a=0.05, adjusted R^2=0.73). On average between water treatments, those that were well watered tended to have a higher total biomass than those that were drought stressed. Grindelia camporum was the species with the highest total biomass for both well watered and drought stressed treatments, however all species had around the same amount of total biomass on average. 
 
 
 # Problem 2. Affective visualization
@@ -244,7 +251,41 @@ For my personal data set, where I am examining the distance traveled each day, I
 
 ## Part b
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Part c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Part d
 
